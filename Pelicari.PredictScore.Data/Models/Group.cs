@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pelicari.PredictScore.Data.Models
 {
@@ -10,7 +11,9 @@ namespace Pelicari.PredictScore.Data.Models
         public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
 
+        [ForeignKey("userId")]
+        public int AdminId { get; set; }
+
         public IEnumerable<User> Users { get; set; }
-        public IEnumerable<Prediction> Predictions { get; set; }
     }
 }

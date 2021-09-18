@@ -10,7 +10,7 @@ using Pelicari.PredictScore.Data.Models.Context;
 namespace Pelicari.PredictScore.Data.Migrations
 {
     [DbContext(typeof(PredictScoreContext))]
-    [Migration("20201215011628_Initial")]
+    [Migration("20201218032505_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,6 +72,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
+
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -208,6 +211,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Initials")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
 
@@ -291,7 +297,7 @@ namespace Pelicari.PredictScore.Data.Migrations
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Prediction", b =>
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Group", "Group")
-                        .WithMany("Predictions")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -358,11 +364,6 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Prediction");
-                });
-
-            modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Group", b =>
-                {
-                    b.Navigation("Predictions");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Prediction", b =>

@@ -1,24 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pelicari.PredictScore.Core.Services;
 using Pelicari.PredictScore.Core.Services.Interfaces;
 using Pelicari.PredictScore.Data.Models;
 using Pelicari.PredictScore.Web.API.Dto;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Web.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private IMapper _mapper;
-        private ILogger<UserController> _logger;
+        private ILogger<UsersController> _logger;
         private IService<User> _userService;
 
-        public UserController(IService<User> userService, IMapper mapper, ILogger<UserController> logger)
+        public UsersController(IService<User> userService, IMapper mapper, ILogger<UsersController> logger)
         {
             _userService = userService;
             _logger = logger;
@@ -37,9 +37,9 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+        public ActionResult<IEnumerable<UserDto>> GetAll()
         {
-            var users = _userService.GetAll();
+            var users = _userService.GetAll().Select(_mapper.Map<UserDto>);
             if (users != null)
                 return Ok(users);
             return NotFound();

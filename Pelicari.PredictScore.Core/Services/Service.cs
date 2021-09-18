@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Core.Services
 {
-    public abstract class Service<TEntity> : IService<TEntity> where TEntity : class, new()
+    public class Service<TEntity> : IService<TEntity> where TEntity : class, new()
     {
         private IRepository<TEntity> _repository;
 
@@ -19,9 +19,9 @@ namespace Pelicari.PredictScore.Core.Services
             await _repository.AddAsync(entity);
         }
 
-        public virtual Task<TEntity> GetAsync(int teamId)
+        public virtual async Task<TEntity> GetAsync(int teamId)
         {
-            return _repository.GetByIdAsync(teamId);
+            return await _repository.GetByIdAsync(teamId);
         }
 
         public virtual IEnumerable<TEntity> GetAll()

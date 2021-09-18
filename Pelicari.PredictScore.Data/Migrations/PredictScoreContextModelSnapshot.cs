@@ -71,6 +71,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -206,6 +209,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Initials")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
 
@@ -289,7 +295,7 @@ namespace Pelicari.PredictScore.Data.Migrations
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Prediction", b =>
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Group", "Group")
-                        .WithMany("Predictions")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -356,11 +362,6 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Prediction");
-                });
-
-            modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Group", b =>
-                {
-                    b.Navigation("Predictions");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Prediction", b =>

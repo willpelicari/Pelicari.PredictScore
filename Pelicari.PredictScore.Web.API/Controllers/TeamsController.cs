@@ -12,13 +12,13 @@ namespace Pelicari.PredictScore.Web.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TeamController : ControllerBase
+    public class TeamsController : ControllerBase
     {
         private IMapper _mapper;
-        private ILogger<TeamController> _logger;
+        private ILogger<TeamsController> _logger;
         private IService<Team> _teamService;
 
-        public TeamController(IService<Team> teamService, IMapper mapper, ILogger<TeamController> logger)
+        public TeamsController(IService<Team> teamService, IMapper mapper, ILogger<TeamsController> logger)
         {
             _teamService = teamService;
             _logger = logger;
@@ -37,7 +37,7 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TeamDto>>> GetAll()
+        public ActionResult<IEnumerable<TeamDto>> GetAll()
         {
             var team = _teamService.GetAll();
             if (team != null)
