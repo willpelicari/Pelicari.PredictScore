@@ -1,4 +1,4 @@
-﻿namespace Pelicari.PredictScore.Web.API.Dto
+namespace Pelicari.PredictScore.Web.API.Dto
 {
     public class UserDto
     {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Pelicari.PredictScore.Data.Models;
 using Pelicari.PredictScore.Web.API.Dto;

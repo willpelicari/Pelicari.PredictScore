@@ -1,4 +1,4 @@
-﻿using Pelicari.PredictScore.Data.Models;
+using Pelicari.PredictScore.Data.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

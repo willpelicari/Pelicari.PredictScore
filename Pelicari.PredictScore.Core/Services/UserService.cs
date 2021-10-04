@@ -1,4 +1,4 @@
-﻿using Pelicari.PredictScore.Core.Services.Interfaces;
+using Pelicari.PredictScore.Core.Services.Interfaces;
 using Pelicari.PredictScore.Data.Models;
 using Pelicari.PredictScore.Data.Repositories.Interfaces;
 

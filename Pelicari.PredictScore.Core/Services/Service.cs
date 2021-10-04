@@ -1,4 +1,4 @@
-﻿using Pelicari.PredictScore.Core.Services.Interfaces;
+using Pelicari.PredictScore.Core.Services.Interfaces;
 using Pelicari.PredictScore.Data.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Pelicari.PredictScore.Core.Services
 {
     public class Service<TEntity> : IService<TEntity> where TEntity : class, new()
+      
     {
         private IRepository<TEntity> _repository;
 
