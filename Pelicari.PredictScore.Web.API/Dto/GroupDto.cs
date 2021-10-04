@@ -6,6 +6,7 @@ namespace Pelicari.PredictScore.Web.API.Dto
     {
         public string Name { get; set; }
         public int AdminId { get; set; }
+        public int ScheduleId { get; set; }
         public IEnumerable<int> Containers { get; set; }
     }
 }

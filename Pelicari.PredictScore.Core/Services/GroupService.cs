@@ -7,41 +7,49 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Core.Services
 {
-    public class GroupService : Service<Group>, IService<Group>, IGroupService
+    public class GroupService : Service<Group>, IGroupService
     {
-        private IRepository<Schedule> _scheduleRepository;
         private IRepository<Group> _groupRepository;
-        private IRepository<User> _userRepository;
+        private IRepository<Schedule> _scheduleRepository;
+        private IUserService _userService;
 
-        public GroupService(IRepository<Group> groupRepository, IRepository<User> userRepository, IRepository<Schedule> scheduleRepository) : base(groupRepository)
+        public GroupService(IRepository<Group> groupRepository, IRepository<Schedule> scheduleRepository, IUserService userService) : base(groupRepository)
         {
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
             _scheduleRepository = scheduleRepository;
+            _userService = userService;
         }
 
-        public async override Task AddAsync(Group entity)
+        public async override Task AddAsync(Group group)
         {
-            var admin = await _userRepository.GetByIdAsync(entity.AdminId);
+            var admin = await _userService.GetAsync(group.AdminId);
             if (admin == null)
                 throw new ArgumentException("AdminId is not valid");
 
-            var schedule = await _scheduleRepository.GetByIdAsync(entity.ScheduleId);
+            var schedule = await _scheduleRepository.GetByIdAsync(group.ScheduleId);
             if (schedule == null)
                 throw new ArgumentException("ScheduleId is not valid");
-            entity.Schedule = schedule;
 
-            var users = entity.Users.Select(u => Validate(u.Id, _userRepository.GetByIdAsync(u.Id)).Result);
-            entity.Users = users;
+            group.Schedule = schedule;
 
-            await base.AddAsync(entity);
+            var users = group.Users.Select(u => _userService.GetAsync(u.Id).Result).ToArray();
+            group.Users = users;
+
+            await base.AddAsync(group);
         }
 
-        private Task<User> Validate(int userId, Task<User> user)
+        public async Task AddUserAsync(int groupId, int userId)
         {
+            var group = await _groupRepository.GetByIdAsync(groupId);
+            if (group == null)
+                throw new ArgumentException($"group {groupId} was not found");
+
+            var user = await _userService.GetAsync(userId);
             if (user == null)
-                throw new ArgumentException($"UserId {userId} is not valid");
-            return user;
+                throw new ArgumentException($"user {userId} was not found");
+
+            group.Users?.Add(user);
+            await base.UpdateAsync(group);
         }
     }
 }

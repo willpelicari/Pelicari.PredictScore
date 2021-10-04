@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Pelicari.PredictScore.Data.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Core.Services.Interfaces

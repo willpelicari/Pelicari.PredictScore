@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Web.API.Controllers
 {
-    [Route("schedule/{scheduleId}/group/{groupId}/user/{userId}/prediction")]
+    [Route("prediction")]
     [ApiController]
     public class PredictionsController : ControllerBase
     {
@@ -46,23 +46,17 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(int scheduleId, int groupId, int userId, [FromBody] PredictionDto dto)
+        public async Task<IActionResult> Post([FromBody] PredictionDto dto)
         {
             var prediction = _mapper.Map<Prediction>(dto);
-            prediction.ScheduleId = scheduleId;
-            prediction.GroupId = groupId;
-            prediction.UserId = userId;
             await _predictionService.AddAsync(prediction);
             return Created("localhost", "");
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] PredictionDto dto)
+        public async Task<IActionResult> Put([FromBody] PredictionDto dto)
         {
-            if (id == 0)
-                return BadRequest();
             var prediction = _mapper.Map<Prediction>(dto);
-            prediction.Id = id;
             await _predictionService.UpdateAsync(prediction);
             return Ok("Updated");
         }

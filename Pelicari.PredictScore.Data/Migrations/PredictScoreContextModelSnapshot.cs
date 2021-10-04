@@ -50,7 +50,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Property<int?>("HomeTeamId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoundId")
+                    b.Property<int?>("RoundId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -61,7 +61,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Group", b =>
@@ -71,20 +71,22 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AdminId")
+                    b.Property<int?>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScheduleId")
+                    b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdminId");
+
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Group");
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Prediction", b =>
@@ -111,7 +113,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Prediction");
+                    b.ToTable("Predictions");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Round", b =>
@@ -124,14 +126,14 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScheduleId")
+                    b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Round");
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Schedule", b =>
@@ -144,14 +146,14 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SportId")
+                    b.Property<int?>("SportId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SportId");
 
-                    b.ToTable("Schedule");
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Score", b =>
@@ -161,7 +163,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("GameId")
+                    b.Property<int?>("GameId")
                         .HasColumnType("int");
 
                     b.Property<int>("GuestScore")
@@ -170,10 +172,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.Property<int>("HomeScore")
                         .HasColumnType("int");
 
-                    b.Property<int>("PredictionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PredictionId1")
+                    b.Property<int?>("PredictionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -182,9 +181,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasIndex("PredictionId");
 
-                    b.HasIndex("PredictionId1");
-
-                    b.ToTable("Score");
+                    b.ToTable("Scores");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Sport", b =>
@@ -199,7 +196,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sport");
+                    b.ToTable("Sports");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Team", b =>
@@ -220,7 +217,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Team");
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.User", b =>
@@ -230,6 +227,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
@@ -238,7 +238,7 @@ namespace Pelicari.PredictScore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("GroupUser", b =>
@@ -260,19 +260,15 @@ namespace Pelicari.PredictScore.Data.Migrations
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Team", "GuestTeam")
                         .WithMany()
-                        .HasForeignKey("GuestTeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("GuestTeamId");
 
                     b.HasOne("Pelicari.PredictScore.Data.Models.Team", "HomeTeam")
                         .WithMany()
-                        .HasForeignKey("HomeTeamId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("HomeTeamId");
 
                     b.HasOne("Pelicari.PredictScore.Data.Models.Round", "Round")
                         .WithMany("Games")
-                        .HasForeignKey("RoundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoundId");
 
                     b.Navigation("GuestTeam");
 
@@ -283,11 +279,15 @@ namespace Pelicari.PredictScore.Data.Migrations
 
             modelBuilder.Entity("Pelicari.PredictScore.Data.Models.Group", b =>
                 {
+                    b.HasOne("Pelicari.PredictScore.Data.Models.User", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
                     b.HasOne("Pelicari.PredictScore.Data.Models.Schedule", "Schedule")
                         .WithMany("Groups")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScheduleId");
+
+                    b.Navigation("Admin");
 
                     b.Navigation("Schedule");
                 });
@@ -303,7 +303,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                     b.HasOne("Pelicari.PredictScore.Data.Models.Schedule", "Schedule")
                         .WithMany()
                         .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Pelicari.PredictScore.Data.Models.User", "User")
@@ -323,9 +323,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Schedule", "Schedule")
                         .WithMany("Rounds")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScheduleId");
 
                     b.Navigation("Schedule");
                 });
@@ -334,9 +332,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Sport", "Sport")
                         .WithMany("Schedules")
-                        .HasForeignKey("SportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SportId");
 
                     b.Navigation("Sport");
                 });
@@ -345,19 +341,11 @@ namespace Pelicari.PredictScore.Data.Migrations
                 {
                     b.HasOne("Pelicari.PredictScore.Data.Models.Game", "Game")
                         .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GameId");
 
                     b.HasOne("Pelicari.PredictScore.Data.Models.Prediction", "Prediction")
-                        .WithMany()
-                        .HasForeignKey("PredictionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Pelicari.PredictScore.Data.Models.Prediction", null)
                         .WithMany("Scores")
-                        .HasForeignKey("PredictionId1");
+                        .HasForeignKey("PredictionId");
 
                     b.Navigation("Game");
 

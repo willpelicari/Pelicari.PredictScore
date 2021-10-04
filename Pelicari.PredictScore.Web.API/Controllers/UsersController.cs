@@ -16,9 +16,9 @@ namespace Pelicari.PredictScore.Web.API.Controllers
     {
         private IMapper _mapper;
         private ILogger<UsersController> _logger;
-        private IService<User> _userService;
+        private IUserService _userService;
 
-        public UsersController(IService<User> userService, IMapper mapper, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, IMapper mapper, ILogger<UsersController> logger)
         {
             _userService = userService;
             _logger = logger;

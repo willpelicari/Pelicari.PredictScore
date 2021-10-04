@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pelicari.PredictScore.Data.Models
 {
+    [Table("Groups")]
     public class Group
     {
         public int Id { get; set; }
@@ -11,9 +12,9 @@ namespace Pelicari.PredictScore.Data.Models
         public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
 
-        [ForeignKey("userId")]
         public int AdminId { get; set; }
+        public User Admin { get; set; }
 
-        public IEnumerable<User> Users { get; set; }
+        public IList<User> Users { get; set; } = new List<User>();
     }
 }

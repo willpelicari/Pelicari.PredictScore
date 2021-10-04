@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Web.API.Controllers
 {
-    [Route("sport/{sportId}/schedule")]
+    [Route("schedule")]
     [ApiController]
     public class SchedulesController : ControllerBase
     {
         private IMapper _mapper;
         private ILogger<SchedulesController> _logger;
-        private IService<Schedule> _scheduleService;
+        private IScheduleService _scheduleService;
 
-        public SchedulesController(IService<Schedule> scheduleService, IMapper mapper, ILogger<SchedulesController> logger)
+        public SchedulesController(IScheduleService scheduleService, IMapper mapper, ILogger<SchedulesController> logger)
         {
             _scheduleService = scheduleService;
             _logger = logger;
@@ -46,19 +46,16 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(int sportId, [FromBody] ScheduleDto dto)
+        public async Task<IActionResult> Post([FromBody] ScheduleDto dto)
         {
             var schedule = _mapper.Map<Schedule>(dto);
-            schedule.SportId = sportId;
             await _scheduleService.AddAsync(schedule);
             return Created("localhost", "");
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] ScheduleDto dto)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ScheduleDto dto)
         {
-            if (id == 0)
-                return BadRequest();
             var schedule = _mapper.Map<Schedule>(dto);
             schedule.Id = id;
             await _scheduleService.UpdateAsync(schedule);
@@ -72,6 +69,13 @@ namespace Pelicari.PredictScore.Web.API.Controllers
                 return BadRequest();
             await _scheduleService.DeleteAsync(id);
             return Ok("Deleted");
+        }
+
+        [HttpPost("{scheduleId}/group")]
+        public async Task<IActionResult> AddGroup(int scheduleId, [FromBody] int groupId)
+        {
+            await _scheduleService.AddGroupAsync(scheduleId, groupId);
+            return Created("localhost", "");
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Web.API.Controllers
 {
-    [Route("schedule/{scheduleId}/round")]
+    [Route("round")]
     [ApiController]
     public class RoundsController : ControllerBase
     {
@@ -46,21 +46,17 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(int scheduleId, [FromBody] RoundDto dto)
+        public async Task<IActionResult> Post([FromBody] RoundDto dto)
         {
             var round = _mapper.Map<Round>(dto);
-            round.ScheduleId = scheduleId;
             await _roundService.AddAsync(round);
             return Created("localhost", "");
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] RoundDto dto)
+        public async Task<IActionResult> Put([FromBody] RoundDto dto)
         {
-            if (id == 0)
-                return BadRequest();
             var round = _mapper.Map<Round>(dto);
-            round.Id = id;
             await _roundService.UpdateAsync(round);
             return Ok("Updated");
         }

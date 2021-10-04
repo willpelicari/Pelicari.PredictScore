@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Pelicari.PredictScore.Web.API.Controllers
 {
-    [Route("schedule/{scheduleId}/group")]
+    [Route("group")]
     [ApiController]
     public class GroupsController : ControllerBase
     {
@@ -36,32 +36,28 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GroupDto>> Get(int scheduleId, int id)
+        public async Task<ActionResult<GroupDto>> Get(int id)
         {
             if (id == 0)
                 return BadRequest();
-            var group = await _groupService.GetAsync(id);
+            var group = _mapper.Map<GroupDto>(await _groupService.GetAsync(id));
             if (group != null)
                 return Ok(group);
             return NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(int scheduleId, [FromBody] GroupDto dto)
+        public async Task<IActionResult> Post([FromBody] GroupDto dto)
         {
             var group = _mapper.Map<Group>(dto);
-            group.ScheduleId = scheduleId;
             await _groupService.AddAsync(group);
             return Created("localhost", "");
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int scheduleId, int id, [FromBody] GroupDto dto)
+        public async Task<IActionResult> Put(int id, [FromBody] GroupDto dto)
         {
-            if (id == 0)
-                return BadRequest();
             var group = _mapper.Map<Group>(dto);
-            group.ScheduleId = scheduleId;
             group.Id = id;
             await _groupService.UpdateAsync(group);
             return Ok("Updated");
@@ -74,6 +70,13 @@ namespace Pelicari.PredictScore.Web.API.Controllers
                 return BadRequest();
             await _groupService.DeleteAsync(id);
             return Ok("Deleted");
+        }
+
+        [HttpPost("{groupId}/user")]
+        public async Task<IActionResult> AddContainer(int groupId, [FromBody] int userId)
+        {
+            await _groupService.AddUserAsync(groupId, userId);
+            return Created("localhost", "");
         }
     }
 }
