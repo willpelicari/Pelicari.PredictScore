@@ -1,27 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pelicari.PredictScore.Data.Models.Context
 {
     public class PredictScoreContext : DbContext
     {
-        private string _connString;
+        public virtual DbSet<Schedule> Schedules { get; internal set; }
+        public virtual DbSet<Group> Groups { get; internal set; }
+
+        public virtual DbSet<User> Users { get; internal set; }
 
         public PredictScoreContext(string connString)
         {
-            _connString = connString;
         }
 
         public PredictScoreContext(DbContextOptions<PredictScoreContext> options) : base(options)
         {
-
         }
-
-        public virtual DbSet<Team> Team { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Game> Game { get; set; }
-        public virtual DbSet<Prediction> Prediction { get; set; }
-        public virtual DbSet<Round> Round { get; set; }
-        public virtual DbSet<Sport> Sport { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,27 +23,20 @@ namespace Pelicari.PredictScore.Data.Models.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Game>()
-                .HasOne(e => e.HomeTeam)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.Admin)
+                .WithMany();
+
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.Users)
+                .WithMany(u => u.Groups);
+
+            modelBuilder.Entity<Schedule>()
+                .HasMany(s => s.Groups)
+                .WithMany(g => g.Schedules);
 
             modelBuilder.Entity<Game>()
-                .HasOne(e => e.GuestTeam)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Prediction>()
-                .HasOne(e => e.Schedule)
-                .WithMany()
-                .HasForeignKey(e => e.ScheduleId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Score>()
-                .HasOne(e => e.Prediction)
-                .WithMany()
-                .HasForeignKey(e => e.PredictionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasIndex(g => new { g.HomeTeamId, g.GuestTeamId });
         }
     }
 }

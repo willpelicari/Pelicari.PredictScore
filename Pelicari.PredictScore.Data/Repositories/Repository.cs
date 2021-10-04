@@ -1,4 +1,4 @@
-﻿using Pelicari.PredictScore.Data.Models.Context;
+using Pelicari.PredictScore.Data.Models.Context;
 using Pelicari.PredictScore.Data.Repositories.Interfaces;
 using System;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace Pelicari.PredictScore.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public IQueryable<TEntity> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Pelicari.PredictScore.Data.Repositories
             }
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public virtual async Task<TEntity> GetByIdAsync(int id)
         {
             return await _dbContext.FindAsync<TEntity>(id);
         }
@@ -52,7 +52,7 @@ namespace Pelicari.PredictScore.Data.Repositories
             }
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             if (entity == null)
             {
