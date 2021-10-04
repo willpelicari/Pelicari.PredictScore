@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pelicari.PredictScore.Data.Models
@@ -8,7 +9,11 @@ namespace Pelicari.PredictScore.Data.Models
     {
         public int Id { get; set; }
 
+        public DateTime Date { get; set; }
+
         public string Description { get; set; }
+
+        public int ScheduleId { get; set; }
 
         public Schedule Schedule { get; set; }
 

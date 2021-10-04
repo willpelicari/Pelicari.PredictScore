@@ -11,12 +11,16 @@ namespace Pelicari.PredictScore.Web.API.Mapper
     {
         public AutoMapping()
         {
+            CreateMap<Game, GameDetailDto>()
+                .ForMember(g => g.GuestTeam, o => o.MapFrom(src => src.GuestTeam));
             CreateMap<Schedule, ScheduleDto>();
             CreateMap<ScheduleDto, Schedule>();
             CreateMap<Group, GroupDto>()
-                .ForMember(d => d.Containers, o => o.MapFrom(src => src.Users.Select(u => u.Id)));
+                .ForMember(d => d.SchedulesId, o => o.MapFrom(src => src.Schedules.Select(u => u.Id)))
+                .ForMember(d => d.PlayersId, o => o.MapFrom(src => src.Users.Select(u => u.Id)));
             CreateMap<GroupDto, Group>()
-                .ForMember(d => d.Users, o => o.MapFrom(src => src.Containers.Select(c => new User() { Id = c })));
+                .ForMember(d => d.Schedules, o => o.MapFrom(src => src.SchedulesId.Select(c => new Schedule() { Id = c })))
+                .ForMember(d => d.Users, o => o.MapFrom(src => src.PlayersId.Select(c => new User() { Id = c })));
             CreateMap<Team, TeamDto>()
                 .ForMember(d => d.LogoUrl, o => o.MapFrom(src => src.Logo))
                 .ForMember(d => d.TeamName, o => o.MapFrom(src => src.Name));

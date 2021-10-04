@@ -9,12 +9,10 @@ namespace Pelicari.PredictScore.Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public int ScheduleId { get; set; }
-        public Schedule Schedule { get; set; }
-
         public int AdminId { get; set; }
         public User Admin { get; set; }
 
         public IList<User> Users { get; set; } = new List<User>();
+        public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

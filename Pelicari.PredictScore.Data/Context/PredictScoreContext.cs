@@ -7,6 +7,8 @@ namespace Pelicari.PredictScore.Data.Models.Context
         public virtual DbSet<Schedule> Schedules { get; internal set; }
         public virtual DbSet<Group> Groups { get; internal set; }
 
+        public virtual DbSet<User> Users { get; internal set; }
+
         public PredictScoreContext(string connString)
         {
         }
@@ -28,6 +30,13 @@ namespace Pelicari.PredictScore.Data.Models.Context
             modelBuilder.Entity<Group>()
                 .HasMany(g => g.Users)
                 .WithMany(u => u.Groups);
+
+            modelBuilder.Entity<Schedule>()
+                .HasMany(s => s.Groups)
+                .WithMany(g => g.Schedules);
+
+            modelBuilder.Entity<Game>()
+                .HasIndex(g => new { g.HomeTeamId, g.GuestTeamId });
         }
     }
 }

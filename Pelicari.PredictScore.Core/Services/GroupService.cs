@@ -26,14 +26,11 @@ namespace Pelicari.PredictScore.Core.Services
             if (admin == null)
                 throw new ArgumentException("AdminId is not valid");
 
-            var schedule = await _scheduleRepository.GetByIdAsync(group.ScheduleId);
-            if (schedule == null)
-                throw new ArgumentException("ScheduleId is not valid");
-
-            group.Schedule = schedule;
-
             var users = group.Users.Select(u => _userService.GetAsync(u.Id).Result).ToArray();
             group.Users = users;
+
+            var schedules = group.Schedules.Select(u => _scheduleRepository.GetByIdAsync(u.Id).Result).ToArray();
+            group.Schedules = schedules;
 
             await base.AddAsync(group);
         }

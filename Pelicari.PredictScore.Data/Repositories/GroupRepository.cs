@@ -2,7 +2,6 @@
 using Pelicari.PredictScore.Data.Models;
 using Pelicari.PredictScore.Data.Models.Context;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,8 +36,8 @@ namespace Pelicari.PredictScore.Data.Repositories
 
                 entry.AdminId = entity.AdminId;
                 entry.Name = entity.Name;
-                entry.ScheduleId = entity.ScheduleId;
-                UpdateUsers(entry, entity.Users.Select(ue => ue.Id));
+                UpdateUsers(entry, entity);
+                UpdateSchedules(entry, entity);
 
                 await _dbContext.SaveChangesAsync();
                 return entity;
@@ -49,11 +48,30 @@ namespace Pelicari.PredictScore.Data.Repositories
             }
         }
 
-        private void UpdateUsers(Group entry, IEnumerable<int> usersList)
+        private void UpdateSchedules(Group original, Group modified)
         {
-            var entriesToRemove = entry.Users.Where(u => !usersList.Contains(u.Id)).ToList();
+            var newScheduleList = modified.Schedules.Select(ue => ue.Id);
+
+            var entriesToRemove = original.Schedules.Where(u => !newScheduleList.Contains(u.Id)).ToList();
             foreach (var entryRemoved in entriesToRemove)
-                entry.Users.Remove(entryRemoved);
+                original.Schedules.Remove(entryRemoved);
+
+            var entriesToAdd = newScheduleList.Except(original.Schedules.Select(u => u.Id));
+            foreach (var schedule in _dbContext.Schedules.Where(u => entriesToAdd.Contains(u.Id)))
+                original.Schedules.Add(schedule);
+        }
+
+        private void UpdateUsers(Group original, Group modified)
+        {
+            var newUserList = modified.Users.Select(ue => ue.Id);
+
+            var entriesToRemove = original.Users.Where(u => !newUserList.Contains(u.Id)).ToList();
+            foreach (var entryRemoved in entriesToRemove)
+                original.Users.Remove(entryRemoved);
+
+            var entriesToAdd = newUserList.Except(original.Users.Select(u => u.Id));
+            foreach (var user in _dbContext.Users.Where(u => entriesToAdd.Contains(u.Id)))
+                original.Users.Add(user);
         }
 
         private IQueryable<Group> IncludeRelatedData()

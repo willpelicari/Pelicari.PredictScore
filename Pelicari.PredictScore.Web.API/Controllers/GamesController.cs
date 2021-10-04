@@ -26,16 +26,16 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GameDto>> Get()
+        public ActionResult<IEnumerable<GameDetailDto>> Get()
         {
-            var games = _gameService.GetAll().Select(_mapper.Map<GameDto>);
+            var games = _gameService.GetAll().Select(_mapper.Map<GameDetailDto>);
             if (games != null)
                 return Ok(games);
             return NotFound();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameDto>> Get(int id)
+        public async Task<ActionResult<GameDetailDto>> Get(int id)
         {
             if (id == 0)
                 return BadRequest();
@@ -51,17 +51,6 @@ namespace Pelicari.PredictScore.Web.API.Controllers
             var game = _mapper.Map<Game>(dto);
             await _gameService.AddAsync(game);
             return Created("localhost", "");
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] GameDto dto)
-        {
-            if (id == 0)
-                return BadRequest();
-            var game = _mapper.Map<Game>(dto);
-            game.Id = id;
-            await _gameService.UpdateAsync(game);
-            return Ok("Updated");
         }
 
         [HttpDelete("{id}")]
