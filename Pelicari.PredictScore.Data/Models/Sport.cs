@@ -9,6 +9,6 @@ namespace Pelicari.PredictScore.Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
+        public IList<Season> Seasons { get; set; } = new List<Season>();
     }
 }

@@ -12,44 +12,44 @@ namespace Pelicari.PredictScore.Web.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class GamesController : ControllerBase
+    public class MatchesController : ControllerBase
     {
         private IMapper _mapper;
-        private ILogger<GamesController> _logger;
-        private IService<Game> _gameService;
+        private ILogger<MatchesController> _logger;
+        private IService<Match> _matchService;
 
-        public GamesController(IService<Game> gameService, IMapper mapper, ILogger<GamesController> logger)
+        public MatchesController(IService<Match> matchService, IMapper mapper, ILogger<MatchesController> logger)
         {
-            _gameService = gameService;
+            _matchService = matchService;
             _logger = logger;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GameDetailDto>> Get()
+        public ActionResult<IEnumerable<MatchDetailDto>> Get()
         {
-            var games = _gameService.GetAll().Select(_mapper.Map<GameDetailDto>);
-            if (games != null)
-                return Ok(games);
+            var matches = _matchService.GetAll().Select(_mapper.Map<MatchDetailDto>);
+            if (matches != null)
+                return Ok(matches);
             return NotFound();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameDetailDto>> Get(int id)
+        public async Task<ActionResult<MatchDetailDto>> Get(int id)
         {
             if (id == 0)
                 return BadRequest();
-            var game = await _gameService.GetAsync(id);
-            if (game != null)
-                return Ok(game);
+            var match = await _matchService.GetAsync(id);
+            if (match != null)
+                return Ok(match);
             return NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] GameDto dto)
+        public async Task<IActionResult> Post([FromBody] MatchDto dto)
         {
-            var game = _mapper.Map<Game>(dto);
-            await _gameService.AddAsync(game);
+            var match = _mapper.Map<Match>(dto);
+            await _matchService.AddAsync(match);
             return Created("localhost", "");
         }
 
@@ -58,7 +58,7 @@ namespace Pelicari.PredictScore.Web.API.Controllers
         {
             if (id == 0)
                 return BadRequest();
-            await _gameService.DeleteAsync(id);
+            await _matchService.DeleteAsync(id);
             return Ok("Deleted");
         }
     }

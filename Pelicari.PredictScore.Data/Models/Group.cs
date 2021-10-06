@@ -13,6 +13,6 @@ namespace Pelicari.PredictScore.Data.Models
         public User Admin { get; set; }
 
         public IList<User> Users { get; set; } = new List<User>();
-        public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
+        public IList<Season> Seasons { get; set; } = new List<Season>();
     }
 }

@@ -9,7 +9,7 @@ namespace Pelicari.PredictScore.Data.Models
         public int HomeScore { get; set; }
         public int GuestScore { get; set; }
 
-        public Game Game { get; set; }
-        public Prediction Prediction { get; set; }
+        public int MatchId { get; set; }
+        public Match Match { get; set; }
     }
 }

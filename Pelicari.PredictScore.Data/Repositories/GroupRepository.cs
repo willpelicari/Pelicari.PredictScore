@@ -37,7 +37,7 @@ namespace Pelicari.PredictScore.Data.Repositories
                 entry.AdminId = entity.AdminId;
                 entry.Name = entity.Name;
                 UpdateUsers(entry, entity);
-                UpdateSchedules(entry, entity);
+                UpdateSeasons(entry, entity);
 
                 await _dbContext.SaveChangesAsync();
                 return entity;
@@ -48,17 +48,17 @@ namespace Pelicari.PredictScore.Data.Repositories
             }
         }
 
-        private void UpdateSchedules(Group original, Group modified)
+        private void UpdateSeasons(Group original, Group modified)
         {
-            var newScheduleList = modified.Schedules.Select(ue => ue.Id);
+            var newSeasonList = modified.Seasons.Select(ue => ue.Id);
 
-            var entriesToRemove = original.Schedules.Where(u => !newScheduleList.Contains(u.Id)).ToList();
+            var entriesToRemove = original.Seasons.Where(u => !newSeasonList.Contains(u.Id)).ToList();
             foreach (var entryRemoved in entriesToRemove)
-                original.Schedules.Remove(entryRemoved);
+                original.Seasons.Remove(entryRemoved);
 
-            var entriesToAdd = newScheduleList.Except(original.Schedules.Select(u => u.Id));
-            foreach (var schedule in _dbContext.Schedules.Where(u => entriesToAdd.Contains(u.Id)))
-                original.Schedules.Add(schedule);
+            var entriesToAdd = newSeasonList.Except(original.Seasons.Select(u => u.Id));
+            foreach (var season in _dbContext.Seasons.Where(u => entriesToAdd.Contains(u.Id)))
+                original.Seasons.Add(season);
         }
 
         private void UpdateUsers(Group original, Group modified)

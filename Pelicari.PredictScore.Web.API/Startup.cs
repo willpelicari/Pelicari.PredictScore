@@ -40,16 +40,16 @@ namespace Pelicari.PredictScore.Web.API
             services.AddScoped<IService<Sport>, Service<Sport>>();
             services.AddScoped<IRepository<Score>, Repository<Score>>();
             services.AddScoped<IService<Score>, Service<Score>>();
-            services.AddScoped<IRepository<Schedule>, Repository<Schedule>>();
-            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IRepository<Season>, Repository<Season>>();
+            services.AddScoped<ISeasonService, SeasonService>();
             services.AddScoped<IRepository<Round>, Repository<Round>>();
             services.AddScoped<IService<Round>, Service<Round>>();
             services.AddScoped<IRepository<Prediction>, Repository<Prediction>>();
             services.AddScoped<IService<Prediction>, Service<Prediction>>();
             services.AddScoped<IRepository<Group>, GroupRepository>();
             services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<IRepository<Game>, Repository<Game>>();
-            services.AddScoped<IService<Game>, Service<Game>>();
+            services.AddScoped<IRepository<Match>, MatchRepository>();
+            services.AddScoped<IService<Match>, Service<Match>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,14 +9,11 @@ namespace Pelicari.PredictScore.Data.Models
     {
         public int Id { get; set; }
 
-        public DateTime Date { get; set; }
-
         public string Description { get; set; }
 
-        public int ScheduleId { get; set; }
+        public int SeasonId { get; set; }
+        public Season Season { get; set; }
 
-        public Schedule Schedule { get; set; }
-
-        public IEnumerable<Game> Games { get; set; } = new List<Game>();
+        public IEnumerable<Match> Matches { get; set; } = new List<Match>();
     }
 }

@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pelicari.PredictScore.Data.Models
 {
-    [Table("Schedules")]
-    public class Schedule
+    [Table("Seasons")]
+    public class Season
     {
         public int Id { get; set; }
         public string Description { get; set; }

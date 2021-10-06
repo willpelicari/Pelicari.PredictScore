@@ -21,21 +21,6 @@ namespace Pelicari.PredictScore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Initials = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Logo = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -51,7 +36,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Schedules",
+                name: "Seasons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -61,9 +46,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Schedules", x => x.Id);
+                    table.PrimaryKey("PK_Seasons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Schedules_Sports_SportId",
+                        name: "FK_Seasons_Sports_SportId",
                         column: x => x.SportId,
                         principalTable: "Sports",
                         principalColumn: "Id",
@@ -71,29 +56,25 @@ namespace Pelicari.PredictScore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Games",
+                name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HomeTeamId = table.Column<int>(type: "int", nullable: false),
-                    GuestTeamId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Initials = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Logo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SportId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Games", x => x.Id);
+                    table.PrimaryKey("PK_Teams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_Teams_GuestTeamId",
-                        column: x => x.GuestTeamId,
-                        principalTable: "Teams",
+                        name: "FK_Teams_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Games_Teams_HomeTeamId",
-                        column: x => x.HomeTeamId,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,8 +93,7 @@ namespace Pelicari.PredictScore.Data.Migrations
                         name: "FK_Groups_Users_AdminId",
                         column: x => x.AdminId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -122,41 +102,40 @@ namespace Pelicari.PredictScore.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false)
+                    SeasonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rounds", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rounds_Schedules_ScheduleId",
-                        column: x => x.ScheduleId,
-                        principalTable: "Schedules",
+                        name: "FK_Rounds_Seasons_SeasonId",
+                        column: x => x.SeasonId,
+                        principalTable: "Seasons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupSchedule",
+                name: "GroupSeason",
                 columns: table => new
                 {
                     GroupsId = table.Column<int>(type: "int", nullable: false),
-                    SchedulesId = table.Column<int>(type: "int", nullable: false)
+                    SeasonsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupSchedule", x => new { x.GroupsId, x.SchedulesId });
+                    table.PrimaryKey("PK_GroupSeason", x => new { x.GroupsId, x.SeasonsId });
                     table.ForeignKey(
-                        name: "FK_GroupSchedule_Groups_GroupsId",
+                        name: "FK_GroupSeason_Groups_GroupsId",
                         column: x => x.GroupsId,
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupSchedule_Schedules_SchedulesId",
-                        column: x => x.SchedulesId,
-                        principalTable: "Schedules",
+                        name: "FK_GroupSeason_Seasons_SeasonsId",
+                        column: x => x.SeasonsId,
+                        principalTable: "Seasons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -176,70 +155,46 @@ namespace Pelicari.PredictScore.Data.Migrations
                         column: x => x.GroupsId,
                         principalTable: "Groups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GroupUser_Users_UsersId",
                         column: x => x.UsersId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Predictions",
+                name: "Matches",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HomeTeamId = table.Column<int>(type: "int", nullable: false),
+                    GuestTeamId = table.Column<int>(type: "int", nullable: false),
+                    ScoreId = table.Column<int>(type: "int", nullable: false),
+                    RoundId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Predictions", x => x.Id);
+                    table.PrimaryKey("PK_Matches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Predictions_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Predictions_Schedules_ScheduleId",
-                        column: x => x.ScheduleId,
-                        principalTable: "Schedules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Predictions_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GameRound",
-                columns: table => new
-                {
-                    GamesId = table.Column<int>(type: "int", nullable: false),
-                    RoundsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameRound", x => new { x.GamesId, x.RoundsId });
-                    table.ForeignKey(
-                        name: "FK_GameRound_Games_GamesId",
-                        column: x => x.GamesId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GameRound_Rounds_RoundsId",
-                        column: x => x.RoundsId,
+                        name: "FK_Matches_Rounds_RoundId",
+                        column: x => x.RoundId,
                         principalTable: "Rounds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Matches_Teams_GuestTeamId",
+                        column: x => x.GuestTeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Matches_Teams_HomeTeamId",
+                        column: x => x.HomeTeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -250,40 +205,50 @@ namespace Pelicari.PredictScore.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HomeScore = table.Column<int>(type: "int", nullable: false),
                     GuestScore = table.Column<int>(type: "int", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: true),
-                    PredictionId = table.Column<int>(type: "int", nullable: true)
+                    MatchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Scores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Scores_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
+                        name: "FK_Scores_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "Matches",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Scores_Predictions_PredictionId",
-                        column: x => x.PredictionId,
-                        principalTable: "Predictions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_GameRound_RoundsId",
-                table: "GameRound",
-                column: "RoundsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Games_GuestTeamId",
-                table: "Games",
-                column: "GuestTeamId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Games_HomeTeamId_GuestTeamId",
-                table: "Games",
-                columns: new[] { "HomeTeamId", "GuestTeamId" });
+            migrationBuilder.CreateTable(
+                name: "Predictions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    MatchId = table.Column<int>(type: "int", nullable: false),
+                    ScoreId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Predictions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Predictions_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "Matches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Predictions_Scores_ScoreId",
+                        column: x => x.ScoreId,
+                        principalTable: "Scores",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Predictions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_AdminId",
@@ -291,9 +256,9 @@ namespace Pelicari.PredictScore.Data.Migrations
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupSchedule_SchedulesId",
-                table: "GroupSchedule",
-                column: "SchedulesId");
+                name: "IX_GroupSeason_SeasonsId",
+                table: "GroupSeason",
+                column: "SeasonsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupUser_UsersId",
@@ -301,14 +266,30 @@ namespace Pelicari.PredictScore.Data.Migrations
                 column: "UsersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Predictions_GroupId",
-                table: "Predictions",
-                column: "GroupId");
+                name: "IX_Matches_GuestTeamId",
+                table: "Matches",
+                column: "GuestTeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Predictions_ScheduleId",
+                name: "IX_Matches_HomeTeamId",
+                table: "Matches",
+                column: "HomeTeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Matches_RoundId",
+                table: "Matches",
+                column: "RoundId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Predictions_MatchId",
                 table: "Predictions",
-                column: "ScheduleId");
+                column: "MatchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Predictions_ScoreId",
+                table: "Predictions",
+                column: "ScoreId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Predictions_UserId",
@@ -316,60 +297,58 @@ namespace Pelicari.PredictScore.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rounds_ScheduleId",
+                name: "IX_Rounds_SeasonId",
                 table: "Rounds",
-                column: "ScheduleId");
+                column: "SeasonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_SportId",
-                table: "Schedules",
+                name: "IX_Scores_MatchId",
+                table: "Scores",
+                column: "MatchId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seasons_SportId",
+                table: "Seasons",
                 column: "SportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Scores_GameId",
-                table: "Scores",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Scores_PredictionId",
-                table: "Scores",
-                column: "PredictionId");
+                name: "IX_Teams_SportId",
+                table: "Teams",
+                column: "SportId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GameRound");
-
-            migrationBuilder.DropTable(
-                name: "GroupSchedule");
+                name: "GroupSeason");
 
             migrationBuilder.DropTable(
                 name: "GroupUser");
 
             migrationBuilder.DropTable(
-                name: "Scores");
-
-            migrationBuilder.DropTable(
-                name: "Rounds");
-
-            migrationBuilder.DropTable(
-                name: "Games");
-
-            migrationBuilder.DropTable(
                 name: "Predictions");
-
-            migrationBuilder.DropTable(
-                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Schedules");
+                name: "Scores");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Matches");
+
+            migrationBuilder.DropTable(
+                name: "Rounds");
+
+            migrationBuilder.DropTable(
+                name: "Teams");
+
+            migrationBuilder.DropTable(
+                name: "Seasons");
 
             migrationBuilder.DropTable(
                 name: "Sports");

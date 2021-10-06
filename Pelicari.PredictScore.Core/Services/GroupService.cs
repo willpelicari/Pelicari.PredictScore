@@ -10,13 +10,13 @@ namespace Pelicari.PredictScore.Core.Services
     public class GroupService : Service<Group>, IGroupService
     {
         private IRepository<Group> _groupRepository;
-        private IRepository<Schedule> _scheduleRepository;
+        private IRepository<Season> _seasonRepository;
         private IUserService _userService;
 
-        public GroupService(IRepository<Group> groupRepository, IRepository<Schedule> scheduleRepository, IUserService userService) : base(groupRepository)
+        public GroupService(IRepository<Group> groupRepository, IRepository<Season> seasonRepository, IUserService userService) : base(groupRepository)
         {
             _groupRepository = groupRepository;
-            _scheduleRepository = scheduleRepository;
+            _seasonRepository = seasonRepository;
             _userService = userService;
         }
 
@@ -29,8 +29,8 @@ namespace Pelicari.PredictScore.Core.Services
             var users = group.Users.Select(u => _userService.GetAsync(u.Id).Result).ToArray();
             group.Users = users;
 
-            var schedules = group.Schedules.Select(u => _scheduleRepository.GetByIdAsync(u.Id).Result).ToArray();
-            group.Schedules = schedules;
+            var seasons = group.Seasons.Select(u => _seasonRepository.GetByIdAsync(u.Id).Result).ToArray();
+            group.Seasons = seasons;
 
             await base.AddAsync(group);
         }
