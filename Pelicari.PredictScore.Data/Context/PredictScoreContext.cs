@@ -47,6 +47,7 @@ namespace Pelicari.PredictScore.Data.Models.Context
                 .HasOne(m => m.Score)
                 .WithOne(s => s.Match)
                 .HasForeignKey<Score>(s => s.MatchId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Match>()

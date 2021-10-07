@@ -2,9 +2,9 @@
 {
     public class ScoreDto
     {
-        public string GuestTeam { get; set; }
+        public int GuestTeamId { get; set; }
         public int GuestScore { get; set; }
         public int HomeScore { get; set; }
-        public string HomeTeam { get; set; }
+        public int HomeTeamId { get; set; }
     }
 }

@@ -42,8 +42,8 @@ namespace Pelicari.PredictScore.Web.API
             services.AddScoped<IService<Score>, Service<Score>>();
             services.AddScoped<IRepository<Season>, Repository<Season>>();
             services.AddScoped<ISeasonService, SeasonService>();
-            services.AddScoped<IRepository<Round>, Repository<Round>>();
-            services.AddScoped<IService<Round>, Service<Round>>();
+            services.AddScoped<IRepository<Round>, RoundRepository>();
+            services.AddScoped<IService<Round>, RoundService>();
             services.AddScoped<IRepository<Prediction>, Repository<Prediction>>();
             services.AddScoped<IService<Prediction>, Service<Prediction>>();
             services.AddScoped<IRepository<Group>, GroupRepository>();

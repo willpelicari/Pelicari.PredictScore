@@ -32,7 +32,7 @@ namespace Pelicari.PredictScore.Data.Repositories
             return await _dbContext.FindAsync<TEntity>(id);
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
             if (entity == null)
             {

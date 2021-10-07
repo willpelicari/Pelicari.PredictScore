@@ -12,7 +12,9 @@ namespace Pelicari.PredictScore.Web.API.Mapper
         public AutoMapping()
         {
             CreateMap<Match, MatchDetailDto>();
-            CreateMap<MatchDto, Match>();
+            CreateMap<MatchDto, Match>()
+                .ForMember(d => d.GuestTeamId, o => o.MapFrom(src => src.GuestTeamId));
+            CreateMap<ScoreDto, Score>();
 
             CreateMap<Season, SeasonDto>();
             CreateMap<SeasonDto, Season>();
