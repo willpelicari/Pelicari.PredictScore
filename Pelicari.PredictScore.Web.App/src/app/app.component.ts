@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Pelicari-PredictScore-Web-App';
+  title = "Peliçari's Predict Score";
 }
